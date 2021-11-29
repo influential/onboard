@@ -54,7 +54,7 @@ def copyInputToRAW(targetPath, inputPath):
 # Determine if the session is for a CONCERT or MUSIC VIDEO
 def getContentType():
     while True:
-        contentType = int(input("Which option?:\n   Concert (1)\n   Music Video (2)\n   Exit program (3)\n"))
+        contentType = int(input("Which option?:\n(1) Concert\n(2) Music Video\n(3) Exit program\n"))
 
         if contentType == 1 or contentType == 2 or contentType == 3:
             return contentType
@@ -195,7 +195,6 @@ def main():
     displayDebugInfo(saveDrivePath, inputDrivePath)
     mode = getContentType()
 
-    
     if mode == 1:  # CONCERT
         concert(saveDrivePath, inputDrivePath)
     elif mode == 2: # MUSIC VIDEO
