@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 def welcome():
-    print("======================================================================================")
+    print("===================================================")
     print("    ____        _                         _ ")                                
     print("   / __ \      | |                       | |")                                
     print("  | |  | |_ __ | |__   ___   __ _ _ __ __| |")                                
@@ -21,7 +21,7 @@ def welcome():
     print("  | |__| | | | | |_) | (_) | (_| | | | (_| |")                                
     print("   \____/|_| |_|_.__/ \___/ \__,_|_|  \__,_|")                                
     print()
-    print("======================================================================================")
+    print("===================================================")
 
 
 # Copies all of the files inside of the DCIM/###_PANA directory into the specified RAW folder path
@@ -93,7 +93,7 @@ def displayDebugInfo(saveDrivePath, inputDrivePath):
             # dataFilePath = os.path.join(dataFolderPath, file)
 
     print()
-    print("======================================================================================")
+    print("===================================================")
     print()
     print()
 
@@ -133,7 +133,17 @@ def concert(savePath, inputPath):
 
     # Seperate the .MOV files from .JPG and .RW2
 
+    # Create a photos directory inside of RAW
 
+    # Store all .JPG and .RW2 files in photos directory
+
+    # Create an empty 'To Edit' directory inside of the photos directory
+
+    # Create a footage directory inside of RAW
+
+    # Store all .MOV files inside of footage directory
+
+    # Done
 
 def musicVid(savePath, inputPath):
     artistName = str(input("Enter artist name:\n"))
@@ -165,7 +175,9 @@ def musicVid(savePath, inputPath):
     # If the song already has a folder, throw an error. Can handle this if we need to later
     except FileExistsError:
         print(f"Error - This song folder already exists {newProjectDirPath}")
-        return
+        print("Exiting...")
+        quit()
+
     # Create the raw directory that stores all of the input data
     rawDirectory = buildRAW(newProjectDirPath)
 
