@@ -190,15 +190,20 @@ def main():
     saveDrivePath = '/mnt/i/testingDirVal'
     inputDrivePath = '/mnt/e/testingDirOdin'
 
+    windowsSaveDrivePath = "I:\testingDirVal"
+    windowsInputDrivePath = "E:\testingDirOdin"
+
     welcome()
 
     displayDebugInfo(saveDrivePath, inputDrivePath)
     mode = getContentType()
 
     if mode == 1:  # CONCERT
-        concert(saveDrivePath, inputDrivePath)
+        # concert(saveDrivePath, inputDrivePath)
+        concert(windowsSaveDrivePath, windowsInputDrivePath)
     elif mode == 2: # MUSIC VIDEO
-        musicVid(saveDrivePath, inputDrivePath)
+        # musicVid(saveDrivePath, inputDrivePath)
+        musicVid(windowsSaveDrivePath, windowsInputDrivePath)
     elif mode == 3:
         return
     else:
