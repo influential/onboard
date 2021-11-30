@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os, sys, shutil
-from pathlib import Path
 
 
 #    ____        _                         _ 
@@ -126,7 +125,7 @@ def buildConcertDirs(concertAbsPath):
 # Copies all of the files inside of the DCIM/###_PANA directory into the specified RAW folder path
 # TODO: NEED TO CHECK THAT FILES ARE NOT FROM OLD IMPORT BASED ON DATE <-- Get INPUT
 
-def copyInputToRAW(paths, inputPath):
+def copyInputToRAW(paths, inputPath, mode):
     # Set up DCIM path
     dcimDirectory = os.path.join(inputPath, "DCIM")
     # print(dcimDirectory)
@@ -150,22 +149,19 @@ def copyInputToRAW(paths, inputPath):
                 print("Exiting...")
                 quit()    
            
-            print(extension)
-             
-            if extension == 'mov' or extension == 'MOV':
-                copyToTargetPath(paths['footage'], dataFolderPath, file)
-            elif extension == 'jpg' or extension == 'JPG' or extension == 'jpeg' or extension == 'JPEG' or extension == 'rw2' or extension == 'RW2':
-                copyToTargetPath(paths['photos'], dataFolderPath, file)
-            elif extension == "txt" or extension == 'TXT':
-                copyToTargetPath(paths['photos'], dataFolderPath, file)
-            else:
-                print(f"Invalid file type found {extension}")
-                print("Exiting...")
-                quit()
-            
-            
-        # print()
-    
+            if mode == 1:
+                if extension == 'mov' or extension == 'MOV':
+                    copyToTargetPath(paths['footage'], dataFolderPath, file)
+                elif extension == 'jpg' or extension == 'JPG' or extension == 'jpeg' or extension == 'JPEG' or extension == 'rw2' or extension == 'RW2':
+                    copyToTargetPath(paths['photos'], dataFolderPath, file)
+                elif extension == "txt" or extension == 'TXT':  # replace this with .rw2 eventually
+                    copyToTargetPath(paths['photos'], dataFolderPath, file)
+                else:
+                    print(f"Invalid file type found {extension}")
+                    print("Exiting...")
+                    quit()    
+            elif mode == 2:
+                copyToTargetPath(paths['raw'], dataFolderPath, file)
         
 
 # Copy the input file to the specified target path
@@ -173,11 +169,11 @@ def copyToTargetPath(targetPath, inputFolderPath, file):
     inputFilePath = os.path.join(inputFolderPath, file)
     shutil.copy(inputFilePath, targetPath) 
     print("Success!")
-    print(f"{inputFilePath} --> {targetPath}")
+    print(f"{inputFilePath} --> {os.path.join(targetPath, file)}")
 
 
 # Handles all of the logic for concert sessions
-def concert(savePath, inputPath):
+def concert(savePath, inputPath, mode):
     concertName = str(input("\nEnter concert title:\n"))
 
     liveShowsDirPath = os.path.join(savePath, "LiveShows")  # Determine path of LiveShows folder
@@ -200,10 +196,10 @@ def concert(savePath, inputPath):
     pathsDict = buildConcertDirs(newProjectDirPath)
 
     # Copy data from input drive into RAW directory
-    copyInputToRAW(pathsDict, inputPath)
+    copyInputToRAW(pathsDict, inputPath, mode)
 
 
-def musicVid(savePath, inputPath):
+def musicVid(savePath, inputPath, mode):
     artistName = str(input("Enter artist name:\n"))
     songName = str(input("Enter song name:\n"))
 
@@ -240,7 +236,9 @@ def musicVid(savePath, inputPath):
     rawDirectory = buildRAW(newProjectDirPath)
 
     # Copy data from input drive into RAW directory
-    copyInputToRAW(rawDirectory, inputPath)
+    pathsDict = {}
+    pathsDict['raw'] = rawDirectory
+    copyInputToRAW(pathsDict, inputPath, mode)
 
 
 def main():
@@ -254,18 +252,19 @@ def main():
     welcome()
 
     displayDebugInfo(saveDrivePath, inputDrivePath)
-    mode = getContentType()
+    sessionMode = getContentType()
 
-    if mode == 1:  # CONCERT
-        concert(saveDrivePath, inputDrivePath)
+    if sessionMode == 1:  # CONCERT
+        concert(saveDrivePath, inputDrivePath, sessionMode)
         # concert(windowsSaveDrivePath, windowsInputDrivePath)
-    elif mode == 2: # MUSIC VIDEO
-        musicVid(saveDrivePath, inputDrivePath)
+    elif sessionMode == 2: # MUSIC VIDEO
+        musicVid(saveDrivePath, inputDrivePath, sessionMode)
         # musicVid(windowsSaveDrivePath, windowsInputDrivePath)
-    elif mode == 3:
+    elif sessionMode == 3:
         return
     else:
         print("Error - Invalid Content Type")
+        return
 
     print()
     print("Done")
