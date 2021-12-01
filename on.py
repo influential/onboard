@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
-import os, sys, shutil
+import os
+import sys
+import shutil
 
-
-#    ____        _                         _ 
+#    ____        _                         _
 #   / __ \      | |                       | |
 #  | |  | |_ __ | |__   ___   __ _ _ __ __| |
 #  | |  | | '_ \| '_ \ / _ \ / _` | '__/ _` |
@@ -13,23 +14,21 @@ import os, sys, shutil
 
 def welcome():
     print("===================================================")
-    print("    ____        _                         _ ")                                
-    print("   / __ \      | |                       | |")                                
-    print("  | |  | |_ __ | |__   ___   __ _ _ __ __| |")                                
-    print("  | |  | | '_ \| '_ \ / _ \ / _` | '__/ _` |")                                
-    print("  | |__| | | | | |_) | (_) | (_| | | | (_| |")                                
-    print("   \____/|_| |_|_.__/ \___/ \__,_|_|  \__,_|")                                
+    print("    ____        _                         _ ")
+    print("   / __ \      | |                       | |")
+    print("  | |  | |_ __ | |__   ___   __ _ _ __ __| |")
+    print("  | |  | | '_ \| '_ \ / _ \ / _` | '__/ _` |")
+    print("  | |__| | | | | |_) | (_) | (_| | | | (_| |")
+    print("   \____/|_| |_|_.__/ \___/ \__,_|_|  \__,_|")
     print()
     print("===================================================")
-
-
-
 
 
 # Determine if the session is for a CONCERT or MUSIC VIDEO
 def getContentType():
     while True:
-        contentType = int(input("Which option?:\n(1) Concert\n(2) Music Video\n(3) Exit program\n"))
+        contentType = int(
+            input("Which option?:\n(1) Concert\n(2) Music Video\n(3) Exit program\n"))
 
         if contentType == 1 or contentType == 2 or contentType == 3:
             return contentType
@@ -59,9 +58,9 @@ def displayDebugInfo(saveDrivePath, inputDrivePath):
         # print(folder)
         dataFolderPath = os.path.join(dcimDirPath, folder)
         print(dataFolderPath)
-        
+
         dataFiles = os.listdir(os.path.join(dcimDirPath, folder))
-        
+
         # Copy everything from the input drive into the RAW directory
         for file in dataFiles:
             print(f"    {file}")
@@ -81,15 +80,17 @@ def buildRAW(target):
         os.mkdir(rawDirPath)
     except:
         print(f"Error making 'RAW' folter at {rawDirPath}")
-    
+
     return rawDirPath
 
 # Builds all of the necessary folders per Z's specification
+
+
 def buildConcertDirs(concertAbsPath):
     # Dictionary of paths
     paths = {}
 
-    # Get the path to the RAW directory 
+    # Get the path to the RAW directory
     rawDirPath = buildRAW(concertAbsPath)
     paths['raw'] = rawDirPath
 
@@ -125,6 +126,7 @@ def buildConcertDirs(concertAbsPath):
 # Copies all of the files inside of the DCIM/###_PANA directory into the specified RAW folder path
 # TODO: NEED TO CHECK THAT FILES ARE NOT FROM OLD IMPORT BASED ON DATE <-- Get INPUT
 
+
 def copyInputToRAW(paths, inputPath, mode):
     # Set up DCIM path
     dcimDirectory = os.path.join(inputPath, "DCIM")
@@ -137,9 +139,9 @@ def copyInputToRAW(paths, inputPath, mode):
         # print(folder)
         dataFolderPath = os.path.join(dcimDirectory, folder)
         # print(dataFolderPath)
-        
+
         dataFiles = os.listdir(os.path.join(dcimDirectory, folder))
-        
+
         # Copy everything from the input drive into the appropriate directory
         for file in dataFiles:
             try:
@@ -147,8 +149,8 @@ def copyInputToRAW(paths, inputPath, mode):
             except:
                 print(f"Error getting extension of file {file}")
                 print("Exiting...")
-                quit()    
-           
+                quit()
+
             if mode == 1:
                 if extension == 'mov' or extension == 'MOV':
                     copyToTargetPath(paths['footage'], dataFolderPath, file)
@@ -159,15 +161,15 @@ def copyInputToRAW(paths, inputPath, mode):
                 else:
                     print(f"Invalid file type found {extension}")
                     print("Exiting...")
-                    quit()    
+                    quit()
             elif mode == 2:
                 copyToTargetPath(paths['raw'], dataFolderPath, file)
-        
+
 
 # Copy the input file to the specified target path
 def copyToTargetPath(targetPath, inputFolderPath, file):
     inputFilePath = os.path.join(inputFolderPath, file)
-    shutil.copy(inputFilePath, targetPath) 
+    shutil.copy(inputFilePath, targetPath)
     print("Success!")
     print(f"{inputFilePath} --> {os.path.join(targetPath, file)}")
 
@@ -176,22 +178,24 @@ def copyToTargetPath(targetPath, inputFolderPath, file):
 def concert(savePath, inputPath, mode):
     concertName = str(input("\nEnter concert title:\n"))
 
-    liveShowsDirPath = os.path.join(savePath, "LiveShows")  # Determine path of LiveShows folder
-  
+    # Determine path of LiveShows folder
+    liveShowsDirPath = os.path.join(savePath, "LiveShows")
+
     # print(liveShowsDirPath)
     # print(newProjectDirPath)
 
     # Create new project folder based on concert name
     try:
-        newProjectDirPath = os.path.join(liveShowsDirPath, concertName)  # Append new project directory to LiveShows path
+        # Append new project directory to LiveShows path
+        newProjectDirPath = os.path.join(liveShowsDirPath, concertName)
         os.mkdir(newProjectDirPath)
-    
+
     # If the concert somehow already exists, throw an error and exit gracefully
     except FileExistsError:
         print(f"Found previous artist folder {newProjectDirPath}")
         print("Exiting...")
         quit()
-    
+
     # Create all of the necessary sub-directories inside of the concert folder
     pathsDict = buildConcertDirs(newProjectDirPath)
 
@@ -203,14 +207,16 @@ def musicVid(savePath, inputPath, mode):
     artistName = str(input("Enter artist name:\n"))
     songName = str(input("Enter song name:\n"))
 
-    artistsDirPath = os.path.join(savePath, "Artists")  # Determine path of Artists folder
-    newArtistDirPath = os.path.join(artistsDirPath, artistName)  # Append new project directory to Artists path
-    
+    # Determine path of Artists folder
+    artistsDirPath = os.path.join(savePath, "Artists")
+    # Append new project directory to Artists path
+    newArtistDirPath = os.path.join(artistsDirPath, artistName)
+
     # Try to create a new folder using artist name
     try:
         os.mkdir(newArtistDirPath)
         print(f"Successfully created artist folder {newArtistDirPath}")
-    
+
     # If the file already exists its okay, handle the error graciously and continue
     except FileExistsError:
         print(f"Found previous artist folder {newArtistDirPath}")
@@ -219,7 +225,7 @@ def musicVid(savePath, inputPath, mode):
 
     # Create a new project folder inside of the artist's folder
     newProjectDirPath = os.path.join(newArtistDirPath, songName)
-    
+
     # Try to create new folder for the song
     try:
         os.mkdir(newProjectDirPath)
@@ -257,7 +263,7 @@ def main():
     if sessionMode == 1:  # CONCERT
         concert(saveDrivePath, inputDrivePath, sessionMode)
         # concert(windowsSaveDrivePath, windowsInputDrivePath)
-    elif sessionMode == 2: # MUSIC VIDEO
+    elif sessionMode == 2:  # MUSIC VIDEO
         musicVid(saveDrivePath, inputDrivePath, sessionMode)
         # musicVid(windowsSaveDrivePath, windowsInputDrivePath)
     elif sessionMode == 3:
@@ -268,6 +274,7 @@ def main():
 
     print()
     print("Done")
+
 
 if __name__ == "__main__":
     main()
