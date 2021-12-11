@@ -164,6 +164,7 @@ def buildGUI(paths):
                     pady=0)
 
     # root.grid_columnconfigure((0, 4), weight=1)
+    root.resizable(False, False)
     root.mainloop()
 
 
